@@ -146,6 +146,22 @@
             border-bottom: 1px solid var(--main-blue);
             cursor: pointer;
         }
+
+        /* --- ส่วนที่เพิ่มใหม่: หน้าวันเกิดแฟน --- */
+        #birthday-menu, #scratch-screen, #game-screen { display: none; }
+        .menu-box { display: flex; justify-content: space-around; margin-top: 20px; }
+        .menu-item { cursor: pointer; }
+        .menu-icon { font-size: 3rem; background: var(--soft-blue); padding: 15px; border-radius: 20px; margin-bottom: 5px; }
+
+        /* Scratch Game */
+        #scratch-container { position: relative; width: 250px; height: 250px; margin: 0 auto; border-radius: 15px; overflow: hidden; background: #eee; }
+        #scratch-canvas { position: absolute; top: 0; left: 0; z-index: 2; touch-action: none; cursor: crosshair; }
+        #couple-img { width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+
+        /* Heart Game */
+        #game-area { width: 100%; height: 400px; background: var(--soft-blue); border-radius: 20px; position: relative; overflow: hidden; touch-action: none; margin-top: 10px; }
+        #player { position: absolute; bottom: 10px; width: 60px; height: 60px; transform: translateX(-50%); border-radius: 50%; object-fit: cover; z-index: 10; }
+        .falling-item { position: absolute; width: 45px; height: 45px; border-radius: 50%; object-fit: cover; z-index: 5; }
     </style>
 </head>
 <body>
@@ -154,7 +170,6 @@
         <span class="icon-top">🔒</span>
         <h2>Enter Passcode</h2>
         <p>ใส่รหัสผ่าน 6 หลัก<br>เพื่อเข้าสู่พื้นที่ของเรานะคะ</p>
-        
         <input type="password" id="passcodeInput" class="passcode-input" inputmode="numeric" maxlength="6" placeholder="******">
         <button class="btn" onclick="checkPasscode()">Unlock</button>
         <p id="errorText" class="error-msg">รหัสผิด...ไปจำวันของเด็กคนไหนมา!!!</p>
@@ -164,85 +179,154 @@
         <span class="icon-top">🩵</span>
         <h2 style="font-weight: 300; letter-spacing: 2px;">JOURNEY OF US</h2>
         <p style="color: #444;">เทอเป็นแฟนเค้าตั้งแต่วันที่ <br><b>01 Feb 2026 | 13:52</b></p>
-        
         <div class="timer-box">
-            <div class="timer-item">
-                <span class="number" id="days">0</span>
-                <span class="label">DAYS</span>
-            </div>
-            <div class="timer-item">
-                <span class="number" id="minutes">0</span>
-                <span class="label">MINS</span>
-            </div>
-            <div class="timer-item">
-                <span class="number" id="seconds">0</span>
-                <span class="label">SECS</span>
-            </div>
+            <div class="timer-item"><span class="number" id="days">0</span><span class="label">DAYS</span></div>
+            <div class="timer-item"><span class="number" id="minutes">0</span><span class="label">MINS</span></div>
+            <div class="timer-item"><span class="number" id="seconds">0</span><span class="label">SECS</span></div>
         </div>
-
-        <p style="margin-top: 15px;">
-            I will love you more every day <br>
-            <span class="highlight">"jajah"</span>
-        </p>
-
+        <p style="margin-top: 15px;">I will love you more every day <br><span class="highlight">"jajah"</span></p>
         <span class="back-link" onclick="goBack()">🔙 กลับหน้าแรก</span>
     </div>
 
+    <div class="container" id="birthday-menu">
+        <span class="icon-top">🎂</span>
+        <h2>HBD MY BOY</h2>
+        <p>เลือกสิ่งที่อยากทำเลยนะคะ</p>
+        <div class="menu-box">
+            <div class="menu-item" onclick="initScratch()">
+                <div class="menu-icon">🔍</div>
+                <p style="font-size:0.8rem">ขูดลุ้นรูปคู่</p>
+            </div>
+            <div class="menu-item" onclick="initGame()">
+                <div class="menu-icon">🎮</div>
+                <p style="font-size:0.8rem">รับหน้าแฟน</p>
+            </div>
+        </div>
+        <span class="back-link" onclick="goBack()">🔙 กลับหน้าแรก</span>
+    </div>
+
+    <div class="container" id="scratch-screen">
+        <h2>ขูดดูความทรงจำ!</h2>
+        <div id="scratch-container">
+            <img id="couple-img" src="couple1.jpg" alt="couple">
+            <canvas id="scratch-canvas" width="250" height="250"></canvas>
+        </div>
+        <p style="font-size:0.8rem; margin-top:10px;">ใช้นิ้วขูดที่หน้าจอได้เลย</p>
+        <span class="back-link" onclick="showScreen('birthday-menu')">🔙 กลับไปหน้าเมนู</span>
+    </div>
+
+    <div class="container" id="game-screen">
+        <h2 id="score-text">Score: 0</h2>
+        <div id="game-area">
+            <img id="player" src="me.png.jpg" alt="me" onerror="this.src='👧🏻'">
+        </div>
+        <p style="font-size:0.8rem; margin-top:10px;">ลากหน้าเค้าไปรับหน้าเทอนะ!</p>
+        <span class="back-link" onclick="exitGame()">🔙 กลับไปหน้าเมนู</span>
+    </div>
+
     <script>
+        // ระบบเปลี่ยนหน้า
+        function showScreen(id) {
+            document.querySelectorAll('.container').forEach(c => c.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+
         function checkPasscode() {
             const input = document.getElementById('passcodeInput').value;
-            const error = document.getElementById('errorText');
-            
             if (input === "010226") {
-                document.getElementById('login-screen').style.display = "none";
-                document.getElementById('anniversary-screen').style.display = "block";
-            } else if (input === "230805" || input === "111204") {
+                showScreen('anniversary-screen');
+            } else if (input === "230805") {
+                showScreen('birthday-menu');
+            } else if (input === "111204") {
                 alert("รหัสถูกต้อง! แต่หน้าเพจนี้ยังคิดไม่ออก รอหน่อยน้า");
             } else {
-                error.style.display = "block";
-                document.getElementById('passcodeInput').value = "";
+                document.getElementById('errorText').style.display = "block";
             }
         }
 
         function goBack() {
-            document.getElementById('login-screen').style.display = "block";
-            document.getElementById('anniversary-screen').style.display = "none";
+            showScreen('login-screen');
             document.getElementById('passcodeInput').value = "";
             document.getElementById('errorText').style.display = "none";
         }
 
-        // ตั้งค่าวันที่ 01 Feb 2026 เวลา 13:52
+        // ระบบนับเวลา (01 Feb 2026 | 13:52)
         const startDate = new Date(2026, 1, 1, 13, 52); 
-
         function updateTimer() {
-            const now = new Date();
-            const diff = now - startDate;
+            const diff = new Date() - startDate;
             if (diff > 0) {
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const mins = Math.floor(diff / (1000 * 60)); // นาทีทั้งหมด
-                const displayMins = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60)); // นาทีที่เหลือจากวัน
-                const secs = Math.floor((diff / 1000) % 60);
-
-                document.getElementById('days').innerText = days;
-                document.getElementById('minutes').innerText = displayMins;
-                document.getElementById('seconds').innerText = secs;
+                document.getElementById('days').innerText = Math.floor(diff / 86400000);
+                document.getElementById('minutes').innerText = Math.floor((diff % 86400000) / 60000);
+                document.getElementById('seconds').innerText = Math.floor((diff % 60000) / 1000);
             }
         }
+        setInterval(updateTimer, 1000);
 
+        // ระบบหัวใจลอยพื้นหลัง
         function createHeart() {
             const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '🩵';
+            heart.className = 'heart'; heart.innerHTML = '🩵';
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
             heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
             document.body.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 6000);
+            setTimeout(() => heart.remove(), 6000);
         }
-
-        setInterval(updateTimer, 1000);
         setInterval(createHeart, 800);
-        updateTimer();
+
+        // ระบบเกมขูดรูป
+        function initScratch() {
+            showScreen('scratch-screen');
+            const canvas = document.getElementById('scratch-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = '#C0C0C0';
+            ctx.fillRect(0,0,250,250);
+            ctx.globalCompositeOperation = 'destination-out';
+        }
+        function scratch(e) {
+            const canvas = document.getElementById('scratch-canvas');
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+            const ctx = canvas.getContext('2d');
+            ctx.beginPath(); ctx.arc(x, y, 25, 0, Math.PI*2); ctx.fill();
+        }
+        document.getElementById('scratch-canvas').addEventListener('mousemove', scratch);
+        document.getElementById('scratch-canvas').addEventListener('touchmove', scratch);
+
+        // ระบบเกมรับหัวใจ
+        let gameActive = false, score = 0, gameInterval;
+        const player = document.getElementById('player'), area = document.getElementById('game-area');
+        function initGame() {
+            showScreen('game-screen');
+            gameActive = true; score = 0;
+            document.getElementById('score-text').innerText = "Score: 0";
+            gameInterval = setInterval(spawnItem, 1000);
+        }
+        function spawnItem() {
+            if(!gameActive) return;
+            const item = document.createElement('img');
+            item.src = 'fan.png.jpg'; item.className = 'falling-item';
+            item.style.left = Math.random() * (area.clientWidth - 50) + 'px';
+            item.style.top = '-50px';
+            area.appendChild(item);
+            let pos = -50;
+            const fall = setInterval(() => {
+                pos += 4; item.style.top = pos + 'px';
+                const i = item.getBoundingClientRect(), p = player.getBoundingClientRect();
+                if(i.bottom >= p.top && i.left < p.right && i.right > p.left) {
+                    score++; document.getElementById('score-text').innerText = "Score: " + score;
+                    item.remove(); clearInterval(fall);
+                }
+                if(pos > 400) { item.remove(); clearInterval(fall); }
+            }, 20);
+        }
+        area.addEventListener('touchmove', e => {
+            const x = e.touches[0].clientX - area.getBoundingClientRect().left;
+            if(x > 30 && x < area.clientWidth - 30) player.style.left = x + 'px';
+        });
+        function exitGame() { gameActive = false; clearInterval(gameInterval); showScreen('birthday-menu'); }
     </script>
 </body>
 </html>
