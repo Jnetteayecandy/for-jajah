@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Our Special Space | Jajah</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
     <style>
         :root {
             --main-blue: #64C5D7;
@@ -119,7 +120,7 @@
         }
 
         /* --- ส่วนประกอบภายในแต่ละหน้า --- */
-        #anniversary-screen, #birthday-menu, #scratch-screen, #game-screen { 
+        #anniversary-screen, #birthday-menu, #scratch-screen, #game-screen, #timeline-screen, #map-screen { 
             display: none; 
         }
 
@@ -156,6 +157,89 @@
             border-bottom: 1px solid var(--main-blue);
             cursor: pointer;
         }
+
+        .menu-item { cursor: pointer; }
+
+        /* --- ไทม์ไลน์ความทรงจำ --- */
+        .timeline {
+            position: relative;
+            max-height: 58vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            text-align: left;
+            padding: 6px 4px 6px 30px;
+            margin-top: 15px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--main-blue) transparent;
+        }
+        .tl-item {
+            position: relative;
+            padding-bottom: 24px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .tl-item.show { opacity: 1; transform: none; }
+        .tl-item::before {
+            content: ''; position: absolute; left: -19px; top: 16px; bottom: -4px;
+            width: 2px; background: var(--soft-blue);
+        }
+        .tl-item:last-child::before { display: none; }
+        .tl-dot {
+            position: absolute; left: -26px; top: 2px; width: 16px; height: 16px;
+            border-radius: 50%; background: white; border: 3px solid var(--main-blue);
+            font-size: 0;
+        }
+        .tl-item.is-video .tl-dot { background: var(--main-blue); }
+        .tl-date { font-size: 0.75rem; color: var(--main-blue); font-weight: 600; }
+        .tl-day { font-size: 0.65rem; color: #aaa; margin-left: 6px; font-weight: 400; }
+        .tl-card {
+            margin-top: 6px; background: white; border-radius: 18px; overflow: hidden;
+            box-shadow: 0 6px 18px rgba(100, 197, 215, 0.18);
+            border: 1px solid rgba(100, 197, 215, 0.25);
+        }
+        .tl-media { display: block; width: 100%; max-height: 300px; object-fit: cover; background: var(--soft-blue); }
+        video.tl-media { object-fit: contain; background: #000; }
+        .tl-missing {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 160px; background: var(--soft-blue); color: var(--main-blue); font-size: 0.75rem;
+        }
+        .tl-missing span { font-size: 2rem; }
+        .tl-body { padding: 12px 14px 14px; }
+        .tl-title { font-weight: 500; font-size: 0.95rem; color: var(--text-dark); }
+        .tl-caption { margin: 4px 0 0; font-size: 0.8rem; line-height: 1.5; color: #888; }
+        .tl-place {
+            display: inline-block; margin-top: 8px; padding: 3px 10px; border-radius: 50px;
+            background: var(--soft-blue); color: var(--main-blue); font-size: 0.7rem; cursor: pointer;
+            border: none; font-family: inherit;
+        }
+        .tl-badge {
+            position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.5); color: white;
+            font-size: 0.65rem; padding: 2px 8px; border-radius: 50px; pointer-events: none;
+        }
+        .tl-media-wrap { position: relative; }
+
+        /* --- แผนที่ --- */
+        #map {
+            height: 55vh; margin-top: 15px; border-radius: 20px; overflow: hidden;
+            border: 2px solid var(--soft-blue); z-index: 1;
+        }
+        .photo-pin {
+            width: 44px; height: 44px; border-radius: 50%; overflow: hidden;
+            border: 3px solid white; box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+            background: var(--main-blue); display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+        .photo-pin img { width: 100%; height: 100%; object-fit: cover; }
+        .leaflet-div-icon { background: none; border: none; }
+        .leaflet-popup-content-wrapper { border-radius: 16px; }
+        .leaflet-popup-content { margin: 10px; width: 190px !important; font-family: 'Prompt', sans-serif; text-align: left; }
+        .pop-media { width: 100%; max-height: 150px; object-fit: cover; border-radius: 10px; display: block; background: var(--soft-blue); }
+        video.pop-media { background: #000; object-fit: contain; }
+        .pop-title { font-weight: 500; font-size: 0.85rem; margin-top: 8px; color: var(--text-dark); }
+        .pop-meta { font-size: 0.7rem; color: var(--main-blue); }
+        .pop-link { display: inline-block; margin-top: 6px; font-size: 0.7rem; color: var(--main-blue); cursor: pointer; text-decoration: underline; }
+        .map-count { font-size: 0.75rem; color: #999; margin: 8px 0 0; }
     </style>
 </head>
 <body>
@@ -179,6 +263,16 @@
             <div class="timer-item"><span class="number" id="seconds">0</span><span class="label">SECS</span></div>
         </div>
         <p>I will love you more every day <br><span class="highlight">"jajah"</span></p>
+        <div class="menu-box">
+            <div onclick="openTimeline()" class="menu-item">
+                <div class="menu-icon">📸</div>
+                <p style="font-size:0.75rem">ความทรงจำของเรา</p>
+            </div>
+            <div onclick="openMap()" class="menu-item">
+                <div class="menu-icon">🗺️</div>
+                <p style="font-size:0.75rem">ที่ที่เราไปด้วยกัน</p>
+            </div>
+        </div>
         <span class="back-link" onclick="goBack()">🔙 กลับหน้าแรก</span>
     </div>
 
@@ -218,8 +312,23 @@
         <span class="back-link" onclick="exitGame()">🔙 กลับไปหน้าเมนู</span>
     </div>
 
+    <div class="container" id="timeline-screen">
+        <h2>Our Memories 📸</h2>
+        <p style="margin:0; font-size:0.8rem">เลื่อนลงไปดูเรื่องราวของเรากัน</p>
+        <div class="timeline" id="timeline"></div>
+        <span class="back-link" onclick="showScreen('anniversary-screen')">🔙 กลับไปหน้า Journey</span>
+    </div>
+    <div class="container" id="map-screen">
+        <h2>Places We've Been 🗺️</h2>
+        <div id="map"></div>
+        <p class="map-count" id="map-count"></p>
+        <span class="back-link" onclick="showScreen('anniversary-screen')">🔙 กลับไปหน้า Journey</span>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="memories/data.js"></script>
     <script>
         function showScreen(id) { 
+            document.querySelectorAll('video').forEach(v => v.pause());
             document.querySelectorAll('.container').forEach(c => c.style.display = 'none'); 
             document.getElementById(id).style.display = 'block'; 
         }
@@ -312,6 +421,119 @@
         });
 
         function exitGame() { gameActive = false; clearInterval(gameInterval); showScreen('birthday-menu'); }
+
+        // ===== ระบบความทรงจำ (ข้อมูลอยู่ใน memories/data.js) =====
+        const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const memories = (typeof MEMORIES !== 'undefined' ? MEMORIES : [])
+            .map((m, i) => ({ ...m, id: i, d: new Date(m.date + 'T00:00:00') }))
+            .sort((a, b) => a.d - b.d);
+        const hasPlace = m => typeof m.lat === 'number' && typeof m.lng === 'number';
+
+        function esc(t) {
+            return String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+        function fmtDate(d) { return String(d.getDate()).padStart(2, '0') + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear(); }
+        function dayLabel(d) {
+            const start = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+            const n = Math.round((d - start) / 86400000);
+            return n >= 0 ? 'วันที่ ' + (n + 1) + ' ของเรา' : 'ก่อนเป็นแฟนกัน';
+        }
+        function missingBox(m) {
+            return '<div class="tl-missing"><span>' + (m.type === 'video' ? '🎬' : '🖼️') + '</span>ยังไม่มีไฟล์ ' + esc(m.src) + '</div>';
+        }
+        // ใส่ #t=0.1 ให้ iPhone โชว์เฟรมแรกของคลิปแทนจอดำ
+        function videoSrc(m) { return esc(m.src) + (m.poster || m.src.includes('#') ? '' : '#t=0.1'); }
+        function mediaHTML(m, cls) {
+            const fallback = "this.outerHTML=this.dataset.missing";
+            const missing = esc(missingBox(m));
+            if (m.type === 'video') {
+                return '<video class="' + cls + '" src="' + videoSrc(m) + '"' + (m.poster ? ' poster="' + esc(m.poster) + '"' : '') +
+                    ' controls playsinline preload="metadata" data-missing="' + missing + '" onerror="' + fallback + '"></video>';
+            }
+            return '<img class="' + cls + '" src="' + esc(m.src) + '" alt="' + esc(m.title) + '" loading="lazy" data-missing="' + missing + '" onerror="' + fallback + '">';
+        }
+
+        let timelineBuilt = false;
+        function buildTimeline() {
+            const box = document.getElementById('timeline');
+            if (!memories.length) { box.innerHTML = '<p style="text-align:center">ยังไม่มีความทรงจำ ไปเพิ่มใน memories/data.js ได้เลย 🩵</p>'; return; }
+            box.innerHTML = memories.map(m =>
+                '<div class="tl-item' + (m.type === 'video' ? ' is-video' : '') + '" id="mem-' + m.id + '">' +
+                    '<div class="tl-dot"></div>' +
+                    '<div class="tl-date">' + fmtDate(m.d) + '<span class="tl-day">' + dayLabel(m.d) + '</span></div>' +
+                    '<div class="tl-card">' +
+                        '<div class="tl-media-wrap">' + mediaHTML(m, 'tl-media') + (m.type === 'video' ? '<span class="tl-badge">▶ คลิป</span>' : '') + '</div>' +
+                        '<div class="tl-body">' +
+                            '<div class="tl-title">' + esc(m.title) + '</div>' +
+                            (m.caption ? '<p class="tl-caption">' + esc(m.caption) + '</p>' : '') +
+                            (m.place ? '<button class="tl-place" ' + (hasPlace(m) ? 'onclick="openMap(' + m.id + ')"' : 'disabled') + '>📍 ' + esc(m.place) + '</button>' : '') +
+                        '</div>' +
+                    '</div>' +
+                '</div>'
+            ).join('');
+            // เล่นคลิปทีละอันเท่านั้น
+            box.querySelectorAll('video').forEach(v => v.addEventListener('play', () => {
+                document.querySelectorAll('video').forEach(o => { if (o !== v) o.pause(); });
+            }));
+            // ค่อยๆ โผล่ขึ้นมาตอนเลื่อนถึง
+            const io = new IntersectionObserver(entries => entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); }
+            }), { root: box, threshold: 0.15 });
+            box.querySelectorAll('.tl-item').forEach(el => io.observe(el));
+            timelineBuilt = true;
+        }
+        function openTimeline(focusId) {
+            showScreen('timeline-screen');
+            if (!timelineBuilt) buildTimeline();
+            const box = document.getElementById('timeline');
+            if (focusId !== undefined) {
+                const el = document.getElementById('mem-' + focusId);
+                if (el) { el.classList.add('show'); box.scrollTop = el.offsetTop - 6; }
+            } else {
+                box.scrollTop = 0;
+            }
+        }
+
+        let map, markers = {};
+        function buildMap() {
+            const placed = memories.filter(hasPlace);
+            document.getElementById('map-count').innerText = placed.length
+                ? 'เราไปมาแล้ว ' + new Set(placed.map(m => m.place || (m.lat + ',' + m.lng))).size + ' ที่ 🩵 กดที่หมุดเพื่อดูความทรงจำ'
+                : 'ยังไม่มีสถานที่ ใส่ lat/lng ใน memories/data.js ได้เลย';
+            map = L.map('map', { zoomControl: false, attributionControl: true }).setView([13.7563, 100.5018], 11);
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19, subdomains: 'abcd',
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
+            }).addTo(map);
+            placed.forEach(m => {
+                const thumb = m.type === 'image' ? m.src : m.poster;
+                const icon = L.divIcon({
+                    className: '', iconSize: [44, 44], iconAnchor: [22, 22], popupAnchor: [0, -24],
+                    html: '<div class="photo-pin">' + (thumb ? '<img src="' + esc(thumb) + '" onerror="this.parentNode.innerHTML=\'🩵\'">' : (m.type === 'video' ? '🎬' : '🩵')) + '</div>'
+                });
+                markers[m.id] = L.marker([m.lat, m.lng], { icon }).addTo(map).bindPopup(
+                    mediaHTML(m, 'pop-media') +
+                    '<div class="pop-title">' + esc(m.title) + '</div>' +
+                    '<div class="pop-meta">📍 ' + esc(m.place || '') + ' · ' + fmtDate(m.d) + '</div>' +
+                    '<span class="pop-link" onclick="openTimeline(' + m.id + ')">ดูในไทม์ไลน์ →</span>',
+                    { autoPanPadding: [20, 20] }
+                );
+            });
+            map.on('popupclose', () => document.querySelectorAll('#map video').forEach(v => v.pause()));
+            if (placed.length > 1) map.fitBounds(L.latLngBounds(placed.map(m => [m.lat, m.lng])), { padding: [40, 40], animate: false });
+            else if (placed.length === 1) map.setView([placed[0].lat, placed[0].lng], 14, { animate: false });
+        }
+        function openMap(focusId) {
+            showScreen('map-screen');
+            if (typeof L === 'undefined') { document.getElementById('map-count').innerText = 'โหลดแผนที่ไม่ได้ ลองเช็กอินเทอร์เน็ตดูนะ'; return; }
+            if (!map) buildMap();
+            map.invalidateSize();
+            if (focusId !== undefined && markers[focusId]) {
+                map.setView(markers[focusId].getLatLng(), 15, { animate: false });
+                markers[focusId].openPopup();
+            }
+        }
     </script>
 </body>
 </html>
