@@ -47,6 +47,51 @@ const MEMORIES = [
         type: "image",
         src: "couple1.jpg"
     },
+    // ⏳ รอวันที่ — ใส่ date แล้วลบ // หน้าบรรทัดด้านล่างออก
+    // {
+    //     date: "????-??-??",
+    //     title: "เดทครั้งแรกของเรา 🍽️",
+    //     caption: "ตอนนี้ร้านนี้กลายเป็นร้านโปรดของเราทั้งคู่ไปแล้วนะคะอีร่าน",
+    //     type: "image",
+    //     src: "memories/photo-first-date.jpg"
+    // },
+    {
+        date: "2026-01-19",
+        title: "บาร์ของเรา 🍸",
+        caption: "เค้ารู้นะคะว่าแฟนอยากไปอีกไว้ไปด้วยกันนะคะ ดื่มๆ👉🏻👈🏻 ละก็กลับมาาา...",
+        type: "image",
+        src: "memories/photo-2026-01-19-bar.jpg",
+        place: "บาร์ของเรา",
+        lat: 7.885174, lng: 98.387474
+    },
+    {
+        date: "2026-01-24",
+        title: "First Zipline 🪂",
+        caption: "ซิปไลน์แรกของเรา ไว้ไปเสียวกันหลายๆที่นะคะ",
+        type: "image",
+        src: "memories/photo-2026-01-24-zipline.jpg",
+        place: "Zipline",
+        lat: 7.924563, lng: 98.322813
+    },
+    {
+        date: "2026-02-01",
+        title: "ภาพวาดผ้าใบรูปแรก 🎨",
+        caption: "ขอบคุณนะคะที่พาไปเที่ยวไกลๆ แจ๊สแข็งแรงที่สุด",
+        type: "image",
+        src: "memories/photo-2026-02-01-canvas.jpg",
+        place: "วาดภาพผ้าใบ",
+        lat: 7.766313, lng: 98.317563
+    },
+    {
+        date: "2026-02-14",
+        title: "First Valentine's 💐",
+        caption: "ดอกไม้ดอกแรกของเรา ดีใจที่ได้ให้เธอนะคะ",
+        type: "video",
+        src: "memories/clip-2026-02-14-valentine.mp4",
+        poster: "memories/clip-2026-02-14-valentine-poster.jpg",
+        place: "Culture Phuket",
+        lat: 7.883438, lng: 98.387313
+    },
     {
         date: "2026-07-27",
         title: "ต่างประเทศด้วยกันครั้งแรก ✈️",
