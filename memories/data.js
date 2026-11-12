@@ -23,6 +23,15 @@
 const MEMORIES = [
     {
         date: "2025-11-08",
+        title: "เดททึครั้งแรกของเรา 🍽️",
+        caption: "ตอนนี้ร้านนี้กลายเป็นร้านโปรดของเราทั้งคู่ไปแล้วนะคะอีร่าน",
+        type: "image",
+        src: "memories/photo-first-date.jpg",
+        place: "เดชโคตรกะเพรา"
+        // ใส่ lat / lng ของร้านเพิ่มได้ หมุดจะขึ้นบนแผนที่
+    },
+    {
+        date: "2025-11-08",
         title: "คืนแรกที่เธอมาหาเค้า",
         caption: "ขอบคุณนะคะที่ทำงานเหนื่อยทั้งวันแล้วยังมาหาเค้าอีก ถ้าเธอไม่มาหาวันนั้นจะได้เจอกันมั้ยนะ??",
         type: "video",
@@ -47,21 +56,13 @@ const MEMORIES = [
         type: "image",
         src: "couple1.jpg"
     },
-    // ⏳ รอวันที่ — ใส่ date แล้วลบ // หน้าบรรทัดด้านล่างออก
-    // {
-    //     date: "????-??-??",
-    //     title: "เดทครั้งแรกของเรา 🍽️",
-    //     caption: "ตอนนี้ร้านนี้กลายเป็นร้านโปรดของเราทั้งคู่ไปแล้วนะคะอีร่าน",
-    //     type: "image",
-    //     src: "memories/photo-first-date.jpg"
-    // },
     {
         date: "2026-01-19",
         title: "บาร์ของเรา 🍸",
         caption: "เค้ารู้นะคะว่าแฟนอยากไปอีกไว้ไปด้วยกันนะคะ ดื่มๆ👉🏻👈🏻 ละก็กลับมาาา...",
         type: "image",
         src: "memories/photo-2026-01-19-bar.jpg",
-        place: "บาร์ของเรา",
+        place: "Club No.43",
         lat: 7.885174, lng: 98.387474
     },
     {
@@ -70,7 +71,7 @@ const MEMORIES = [
         caption: "ซิปไลน์แรกของเรา ไว้ไปเสียวกันหลายๆที่นะคะ",
         type: "image",
         src: "memories/photo-2026-01-24-zipline.jpg",
-        place: "Zipline",
+        place: "Flying Hanuman",
         lat: 7.924563, lng: 98.322813
     },
     {
@@ -79,7 +80,7 @@ const MEMORIES = [
         caption: "ขอบคุณนะคะที่พาไปเที่ยวไกลๆ แจ๊สแข็งแรงที่สุด",
         type: "image",
         src: "memories/photo-2026-02-01-canvas.jpg",
-        place: "วาดภาพผ้าใบ",
+        place: "Cominghome Cafe",
         lat: 7.766313, lng: 98.317563
     },
     {
