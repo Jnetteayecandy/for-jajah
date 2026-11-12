@@ -232,6 +232,8 @@
         }
         .photo-pin img { width: 100%; height: 100%; object-fit: cover; }
         .leaflet-div-icon { background: none; border: none; }
+        /* ทำให้สีแผนที่ละมุนเข้ากับธีมฟ้า */
+        #map .leaflet-tile-pane { filter: saturate(0.75) brightness(1.04); }
         .leaflet-popup-content-wrapper { border-radius: 16px; }
         .leaflet-popup-content { margin: 10px; width: 190px !important; font-family: 'Prompt', sans-serif; text-align: left; }
         .pop-media { width: 100%; max-height: 150px; object-fit: cover; border-radius: 10px; display: block; background: var(--soft-blue); }
@@ -502,9 +504,9 @@
                 : 'ยังไม่มีสถานที่ ใส่ lat/lng ใน memories/data.js ได้เลย';
             map = L.map('map', { zoomControl: false, attributionControl: true }).setView([13.7563, 100.5018], 11);
             L.control.zoom({ position: 'bottomright' }).addTo(map);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                maxZoom: 19, subdomains: 'abcd',
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }).addTo(map);
             placed.forEach(m => {
                 const thumb = m.type === 'image' ? m.src : m.poster;
@@ -521,6 +523,10 @@
                 );
             });
             map.on('popupclose', () => document.querySelectorAll('#map video').forEach(v => v.pause()));
+        }
+        // ซูมให้เห็นทุกหมุดพอดีจอ
+        function showAllPins() {
+            const placed = memories.filter(hasPlace);
             if (placed.length > 1) map.fitBounds(L.latLngBounds(placed.map(m => [m.lat, m.lng])), { padding: [40, 40], animate: false });
             else if (placed.length === 1) map.setView([placed[0].lat, placed[0].lng], 14, { animate: false });
         }
@@ -532,6 +538,9 @@
             if (focusId !== undefined && markers[focusId]) {
                 map.setView(markers[focusId].getLatLng(), 15, { animate: false });
                 markers[focusId].openPopup();
+            } else {
+                map.closePopup();
+                showAllPins();
             }
         }
     </script>
