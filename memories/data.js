@@ -29,7 +29,7 @@ const MEMORIES = [
         src: "memories/clip-2025-11-08.mp4",
         poster: "memories/clip-2025-11-08-poster.jpg",
         place: "Culture Phuket",
-        lat: 7.8847, lng: 98.3880   // ⚠️ พิกัดคร่าวๆ ย่านเมืองเก่าภูเก็ต — เปลี่ยนเป็นพิกัดร้านจริงได้
+        lat: 7.883438, lng: 98.387313
     },
     {
         date: "2025-11-10",
