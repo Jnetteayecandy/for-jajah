@@ -23,17 +23,18 @@
 const MEMORIES = [
     {
         date: "2025-11-08",
-        title: "คืนนั้น 🎶",
-        caption: "✏️ แก้แคปชั่นตรงนี้ได้เลย",
+        title: "คืนแรกที่เธอมาหาเค้า",
+        caption: "ขอบคุณนะคะที่ทำงานเหนื่อยทั้งวันแล้วยังมาหาเค้าอีก ถ้าเธอไม่มาหาวันนั้นจะได้เจอกันมั้ยนะ??",
         type: "video",
         src: "memories/clip-2025-11-08.mp4",
-        poster: "memories/clip-2025-11-08-poster.jpg"
-        // ใส่ place / lat / lng เพิ่มได้ถ้าจำได้ว่าที่ไหน
+        poster: "memories/clip-2025-11-08-poster.jpg",
+        place: "Culture Phuket",
+        lat: 7.8847, lng: 98.3880   // ⚠️ พิกัดคร่าวๆ ย่านเมืองเก่าภูเก็ต — เปลี่ยนเป็นพิกัดร้านจริงได้
     },
     {
         date: "2025-11-10",
-        title: "รูปตู้สติกเกอร์ของเรา 📸",
-        caption: "✏️ แก้แคปชั่นตรงนี้ได้เลย",
+        title: "Photo Booth ด้วยกันครั้งแรก 📸",
+        caption: "คิดยังไงถึงชวนไปถ่ายกันนะเนี่ย",
         type: "image",
         src: "memories/photo-2025-11-10.jpg",
         place: "ภูเก็ต",
@@ -48,11 +49,11 @@ const MEMORIES = [
     },
     {
         date: "2026-07-27",
-        title: "ต้มเค้าในโอ่ง 👻",
-        caption: "Ghost Museum ✏️ แก้แคปชั่นตรงนี้ได้เลย",
+        title: "ต่างประเทศด้วยกันครั้งแรก ✈️",
+        caption: "วันหลังไปหลายๆประเทศด้วยกันเลยนะคะ",
         type: "image",
         src: "memories/photo-2026-07-27.jpg",
-        place: "ปีนัง",
+        place: "Ghost Museum, ปีนัง",
         lat: 5.4138, lng: 100.3349
     }
 ];
